@@ -15,14 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/form', function () {
-    return view('form');
-});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/form', function () {
+        return view('form');
+    });
 
-Route::post('/submit', 'FormsController@store');
+    Route::post('/submit', 'FormsController@store');
 
-Route::get('/success', function () {
-    return view('success');
+    Route::get('/success', function () {
+        return view('success');
+    });
 });
 
 Auth::routes();
