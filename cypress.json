@@ -1,1 +1,4 @@
-{}
+{
+    "baseUrl": "http://laravel-cypress-example.test/",
+    "video": false
+}
