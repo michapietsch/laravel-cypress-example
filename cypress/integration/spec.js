@@ -1,5 +1,8 @@
 describe("Form", () => {
     before(() => {
+        cy.exec(
+            "if [ -f .env.backed_up_by_cypress ]; then echo 'It seems Cypress did not finish last time. Check you .env file to prevent loss of data.'; exit 1; fi"
+        );
         cy.exec("cp .env .env.backed_up_by_cypress");
         cy.exec("cp .env.cypress .env");
         cy.exec("php artisan migrate:fresh");
