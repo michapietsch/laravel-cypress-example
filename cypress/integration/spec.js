@@ -19,6 +19,36 @@ describe("Form", () => {
         cy.url().should("include", "/home");
     });
 
+    it("Log in programatically", () => {
+        /**
+         * We need a CSRF token first
+         */
+        cy.visit("/")
+            .getCookie("XSRF-TOKEN")
+            .then(cookie => {
+                cy.wrap(decodeURIComponent(cookie.value)).as("xsrf_token");
+            });
+
+        cy.get("@xsrf_token").then(xsrf_token => {
+            cy.request({
+                method: "POST",
+                url: "/login",
+                form: true,
+                body: {
+                    email: "some_user@example.com",
+                    password: "somePassword"
+                },
+                headers: {
+                    "X-XSRF-TOKEN": xsrf_token
+                }
+            });
+        });
+
+        cy.visit("/home")
+            .url()
+            .should("include", "/home");
+    });
+
     after(() => {
         cy.exec("mv .env.backed_up_by_cypress .env");
     });
