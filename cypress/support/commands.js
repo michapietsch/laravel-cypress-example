@@ -23,3 +23,30 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("getXsrfToken", () => {
+    cy.visit("/")
+        .getCookie("XSRF-TOKEN")
+        .then(cookie => {
+            cy.wrap(decodeURIComponent(cookie.value)).as("xsrf_token");
+        });
+});
+
+Cypress.Commands.add("loginWithCredentials", credentials => {
+    cy.getXsrfToken().then(() => {
+        cy.get("@xsrf_token").then(xsrf_token => {
+            cy.request({
+                method: "POST",
+                url: "/login",
+                form: true,
+                body: {
+                    email: credentials.email,
+                    password: credentials.password
+                },
+                headers: {
+                    "X-XSRF-TOKEN": xsrf_token
+                }
+            });
+        });
+    });
+});

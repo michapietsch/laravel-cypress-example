@@ -20,28 +20,9 @@ describe("Form", () => {
     });
 
     it("Log in programatically", () => {
-        /**
-         * We need a CSRF token first
-         */
-        cy.visit("/")
-            .getCookie("XSRF-TOKEN")
-            .then(cookie => {
-                cy.wrap(decodeURIComponent(cookie.value)).as("xsrf_token");
-            });
-
-        cy.get("@xsrf_token").then(xsrf_token => {
-            cy.request({
-                method: "POST",
-                url: "/login",
-                form: true,
-                body: {
-                    email: "some_user@example.com",
-                    password: "somePassword"
-                },
-                headers: {
-                    "X-XSRF-TOKEN": xsrf_token
-                }
-            });
+        cy.loginWithCredentials({
+            email: "some_user@example.com",
+            password: "somePassword"
         });
 
         cy.visit("/home")
