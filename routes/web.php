@@ -15,6 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/form', function () {
+    return view('form');
+});
+
+Route::post('/submit', 'FormsController@store');
+
+Route::get('/success', function () {
+    return view('success');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
